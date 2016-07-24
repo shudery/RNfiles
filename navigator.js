@@ -16,13 +16,15 @@ import {
 } from 'react-native'; 
 
 var SampleApp = React.createClass({
-
+//场景转换动画配置，这里用淡入淡出
     configureScene(route){
       return Navigator.SceneConfigs.FadeAndroid;
     },
-
+//对路由进行判断 渲染不同的组件 
     renderScene(router, navigator){
-      var Component = null;this._navigator = navigator;
+      var Component = null;
+      //抛出当前的场景navigator
+      this._navigator = navigator;
       switch(router.name){
         case "welcome":
           Component = WelcomeView;
@@ -33,14 +35,15 @@ var SampleApp = React.createClass({
         default: //default view
           Component = DefaultView;
       }
-
+//将navigator传入组件，使组件可以切换场景
       return <Component navigator={navigator} />
     },
-
+//监听返回键，如果场景大于1，那么返回上一个场景
     componentDidMount() {
       var navigator = this._navigator;
       BackAndroid.addEventListener('hardwareBackPress', function() {
           if (navigator && navigator.getCurrentRoutes().length > 1) {
+            //返回上一个场景
             navigator.pop();
             return true;
           }
@@ -54,6 +57,7 @@ var SampleApp = React.createClass({
     },
 
     render() {
+      //initialRoute 第一次加载时选择的内容
         return (
             <Navigator
                 initialRoute={{name: 'welcome'}}
@@ -66,6 +70,7 @@ var SampleApp = React.createClass({
 
 var FeedView = React.createClass({
     goBack(){
+      //触发renderscene
       this.props.navigator.push({name:"default"});
     },
 
@@ -112,9 +117,10 @@ var DefaultView = React.createClass({
 
 const styles = StyleSheet.create({
   container:{
-    flex:1,
     borderColor:'red',
     borderWidth:1,
+    margin:10,
+    height:100,
   },
   welcome:{
     fontSize:20,
